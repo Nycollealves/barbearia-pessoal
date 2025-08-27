@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barba & Corte - Agendamento Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #d4af37;
+            --accent: #007bff;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .cart-icon {
+            position: relative;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            cursor: pointer;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--secondary);
+            color: var(--primary);
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1599351431202-1e0f0137899a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 4rem 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--secondary);
+            color: var(--primary);
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background: #c19b2e;
+            transform: translateY(-2px);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin: 2rem 0;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--secondary);
+        }
+        
+        .services-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .service-image {
+            height: 160px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .service-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .service-description {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+        
+        .service-price {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .service-options {
+            margin-top: 10px;
+        }
+        
+        .option-group {
+            margin-bottom: 10px;
+        }
+        
+        .option-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .option-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+        }
+        
+        .add-to-cart {
+            margin-top: auto;
+            width: 100%;
+            padding: 10px;
+            background: var(--secondary);
+            color: var(--primary);
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .add-to-cart:hover {
+            background: #c19b2e;
+        }
+        
+        .cart-sidebar {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 100px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .cart-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .cart-items {
+            margin-bottom: 1.5rem;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 500;
+        }
+        
+        .cart-item-options {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .cart-item-price {
+            font-weight: bold;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 10px 0;
+            margin-bottom: 1rem;
+            border-top: 2px solid var(--light-gray);
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .checkout-btn:hover {
+            background: #218838;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            color: var(--gray);
+            padding: 2rem 0;
+        }
+        
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1.5rem;
+            padding: 0 15px;
+        }
+        
+        .footer-section h3 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 992px) {
+            .services-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .cart-sidebar {
+                position: relative;
+                top: 0;
+                margin-top: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-cut"></i>
+                Barba & Corte
+            </div>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Estilo que transforma</h1>
+            <p>Agende seu horário e revolucione seu visual com os melhores profissionais da cidade</p>
+            <a href="#services" class="btn">Ver Serviços</a>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title" id="services">Nossos Serviços</h2>
+        
+        <div class="services-container">
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-image" style="background-image: url('https://images.unsplash.com/photo-1503951914875-452162b0f3d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="service-content">
+                        <h3 class="service-title">Corte de Cabelo</h3>
+                        <p class="service-description">Corte moderno e estilizado com as técnicas mais atuais do mercado.</p>
+                        <p class="service-price">R$ 35,00</p>
+                        <div class="service-options">
+                            <div class="option-group">
+                                <label for="hair-style">Estilo:</label>
+                                <select class="option-select" id="hair-style">
+                                    <option value="degrade">Degradê</option>
+                                    <option value="social">Social</option>
+                                    <option value="militar">Militar</option>
+                                    <option value="undercut">Undercut</option>
+                                    <option value="moicano">Moicano</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label for="hair-machine">Máquina:</label>
+                                <select class="option-select" id="hair-machine">
+                                    <option value="1">Nível 1</option>
+                                    <option value="2">Nível 2</option>
+                                    <option value="3">Nível 3</option>
+                                    <option value="4">Nível 4</option>
+                                    <option value="5">Nível 5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="add-to-cart" data-service="Corte de Cabelo" data-price="35">Adicionar ao Carrinho</button>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-image" style="background-image: url('https://images.unsplash.com/photo-1532710093739-9470acff878f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="service-content">
+                        <h3 class="service-title">Barba</h3>
+                        <p class="service-description">Aparar, modelar e definir o formato para valorizar seu rosto.</p>
+                        <p class="service-price">R$ 25,00</p>
+                        <div class="service-options">
+                            <div class="option-group">
+                                <label for="beard-style">Estilo:</label>
+                                <select class="option-select" id="beard-style">
+                                    <option value="deg">Degradê na Barba</option>
+                                    <option value="reta">Barba Reta</option>
+                                    <option value="desenhada">Barba Desenhada</option>
+                                    <option value="bigode">Bigode Estilizado</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label for="beard-machine">Máquina:</label>
+                                <select class="option-select" id="beard-machine">
+                                    <option value="1">Nível 1</option>
+                                    <option value="2">Nível 2</option>
+                                    <option value="3">Nível 3</option>
+                                    <option value="nao">Não usar máquina</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="add-to-cart" data-service="Barba" data-price="25">Adicionar ao Carrinho</button>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-image" style="background-image: url('https://images.unsplash.com/photo-1604187351574-c75ca79f5807?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="service-content">
+                        <h3 class="service-title">Sobrancelha</h3>
+                        <p class="service-description">Design de sobrancelhas para valorizar sua expressão.</p>
+                        <p class="service-price">R$ 15,00</p>
+                        <div class="service-options">
+                            <div class="option-group">
+                                <label for="eyebrow-style">Técnica:</label>
+                                <select class="option-select" id="eyebrow-style">
+                                    <option value="pinça">Com Pinça</option>
+                                    <option value="navalha">Com Navalha</option>
+                                    <option value="linha">Com Linha</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="add-to-cart" data-service="Sobrancelha" data-price="15">Adicionar ao Carrinho</button>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-image" style="background-image: url('https://images.unsplash.com/photo-1595877244574-e90ce41ce089?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="service-content">
+                        <h3 class="service-title">Combo Completo</h3>
+                        <p class="service-description">Corte + Barba + Sobrancelha. O pacote completo para o cuidado masculino.</p>
+                        <p class="service-price">R$ 60,00</p>
+                        <div class="service-options">
+                            <div class="option-group">
+                                <label for="combo-hair">Corte:</label>
+                                <select class="option-select" id="combo-hair">
+                                    <option value="degrade">Degradê</option>
+                                    <option value="social">Social</option>
+                                    <option value="militar">Militar</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label for="combo-beard">Barba:</label>
+                                <select class="option-select" id="combo-beard">
+                                    <option value="deg">Degradê na Barba</option>
+                                    <option value="reta">Barba Reta</option>
+                                    <option value="desenhada">Barba Desenhada</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="add-to-cart" data-service="Combo Completo" data-price="60">Adicionar ao Carrinho</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cart-sidebar">
+                <h3 class="cart-title">Seu Carrinho</h3>
+                <div class="cart-items">
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>Seu carrinho está vazio</p>
+                    </div>
+                </div>
+                <div class="cart-total" style="display: none;">
+                    <span>Total:</span>
+                    <span>R$ <span class="total-amount">0,00</span></span>
+                </div>
+                <button class="checkout-btn" style="display: none;">Agendar Horário</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>Barba & Corte</h3>
+                <p>A melhor barbearia da cidade, com profissionais qualificados e serviços de alta qualidade.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Rua dos Barbeiros, 123</p>
+                <p><i class="fas fa-phone"></i> (11) 99999-9999</p>
+                <p><i class="fas fa-envelope"></i> contato@barbaecorte.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Horário de Funcionamento</h3>
+                <p>Segunda a Sexta: 8h às 19h</p>
+                <p>Sábado: 8h às 18h</p>
+                <p>Domingo: 9h às 14h</p>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>&copy; 2023 Barba & Corte - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartItems = [];
+            const cartCount = document.querySelector('.cart-count');
+            const cartItemsContainer = document.querySelector('.cart-items');
+            const cartTotal = document.querySelector('.cart-total');
+            const totalAmount = document.querySelector('.total-amount');
+            const checkoutBtn = document.querySelector('.checkout-btn');
+            const emptyCart = document.querySelector('.empty-cart');
+            
+            // Função para atualizar o carrinho
+            function updateCart() {
+                // Atualizar contador
+                cartCount.textContent = cartItems.length;
+                
+                // Se o carrinho estiver vazio
+                if (cartItems.length === 0) {
+                    emptyCart.style.display = 'block';
+                    cartTotal.style.display = 'none';
+                    checkoutBtn.style.display = 'none';
+                    return;
+                }
+                
+                // Esconder mensagem de carrinho vazio
+                emptyCart.style.display = 'none';
+                
+                // Limpar itens do carrinho
+                cartItemsContainer.innerHTML = '';
+                
+                // Adicionar itens ao carrinho
+                let total = 0;
+                cartItems.forEach((item, index) => {
+                    total += item.price;
+                    
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.innerHTML = `
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${item.service}</div>
+                            <div class="cart-item-options">${item.options || ''}</div>
+                        </div>
+                        <div class="cart-item-price">R$ ${item.price.toFixed(2)}</div>
+                        <button class="remove-item" data-index="${index}"><i class="fas fa-trash"></i></button>
+                    `;
+                    
+                    cartItemsContainer.appendChild(cartItem);
+                });
+                
+                // Atualizar total
+                totalAmount.textContent = total.toFixed(2);
+                cartTotal.style.display = 'flex';
+                checkoutBtn.style.display = 'block';
+                
+                // Adicionar eventos de remoção
+                document.querySelectorAll('.remove-item').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        cartItems.splice(index, 1);
+                        updateCart();
+                    });
+                });
+            }
+            
+            // Adicionar eventos aos botões "Adicionar ao Carrinho"
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const service = this.getAttribute('data-service');
+                    const price = parseFloat(this.getAttribute('data-price'));
+                    const card = this.closest('.service-card');
+                    
+                    // Coletar opções selecionadas
+                    let options = '';
+                    const selects = card.querySelectorAll('.option-select');
+                    selects.forEach(select => {
+                        if (select.value && select.id !== '') {
+                            const label = card.querySelector(`label[for="${select.id}"]`).textContent;
+                            options += `${label}: ${select.options[select.selectedIndex].text}; `;
+                        }
+                    });
+                    
+                    // Adicionar ao carrinho
+                    cartItems.push({
+                        service: service,
+                        price: price,
+                        options: options.trim()
+                    });
+                    
+                    // Atualizar carrinho
+                    updateCart();
+                    
+                    // Feedback visual
+                    this.textContent = 'Adicionado!';
+                    this.style.background = 'var(--success)';
+                    setTimeout(() => {
+                        this.textContent = 'Adicionar ao Carrinho';
+                        this.style.background = '';
+                    }, 1500);
+                });
+            });
+            
+            // Evento para o botão de finalizar compra
+            checkoutBtn.addEventListener('click', function() {
+                alert('Redirecionando para a página de agendamento de horários...');
+                // Aqui seria redirecionado para a página de seleção de horários
+            });
+            
+            // Inicializar carrinho
+            updateCart();
+        });
+    </script>
+</body>
+</html>
